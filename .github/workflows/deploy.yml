@@ -1,0 +1,31 @@
+name: Build and deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies and build 🔧
+        run: | # Виконуємо кілька команд
+          npm install # Встановлення всіх залежностей, вказаних у package.json
+          npm run build # Запуск команди збірки Vite, яка створює папку 'dist'
+        env:
+          VITE_PIXABAY_API_KEY: ${{ secrets.VITE_PIXABAY_API_KEY }}
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: dist
