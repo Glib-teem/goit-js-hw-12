@@ -2,23 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>twelve</title>
-    <!-- Favicon -->
+    <title>Image Search App</title>
     <link
       rel="icon"
-      type="image/png"
       href="https://raw.githubusercontent.com/Glib-teem/favicon-Abyss/main/images/G-Abyss-Icon-png-bg3.png"
-      sizes="32x32"
     />
     <script type="module" crossorigin src="/goit-js-hw-12/index.js"></script>
-    <link rel="modulepreload" crossorigin href="/goit-js-hw-12/assets/vendor-Dy2ZTtfi.js">
-    <link rel="stylesheet" crossorigin href="/goit-js-hw-12/assets/vendor-DumFYO8Z.css">
-    <link rel="stylesheet" crossorigin href="/goit-js-hw-12/assets/index-j5qAgORG.css">
+    <link rel="modulepreload" crossorigin href="/goit-js-hw-12/assets/vendor-BDlA6vKe.js">
+    <link rel="stylesheet" crossorigin href="/goit-js-hw-12/assets/vendor-Dr4k8ETB.css">
+    <link rel="stylesheet" crossorigin href="/goit-js-hw-12/assets/index-Dhxvou7N.css">
   </head>
   <body>
-    <!-- Фонове зображення -->
     <div class="bg-image"></div>
 
     <form class="form">
@@ -31,8 +26,20 @@
       <button type="submit">Search</button>
     </form>
 
-    <span class="loader is-hidden"></span>
-
     <ul class="gallery"></ul>
+
+    <!-- Кнопка Load More -->
+    <button class="load-more is-hidden">Load more</button>
+
+    <!-- Лоадер під кнопкою -->
+    <span class="loader is-hidden"></span>
+    <!-- кнопка up -->
+    <button
+      id="scrollToTop"
+      class="scroll-to-top is-hidden"
+      aria-label="Повернутися наверх"
+    >
+      ↑
+    </button>
   </body>
 </html>
