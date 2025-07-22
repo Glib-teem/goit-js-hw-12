@@ -1,5 +1,6 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
+import './js/scroll.js';
 
 import { getImagesByQuery } from './js/pixabay-api';
 import {
