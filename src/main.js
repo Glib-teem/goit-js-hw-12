@@ -7,46 +7,25 @@ import {
   clearGallery,
   showLoader,
   hideLoader,
+  showLoadMoreButton,
+  hideLoadMoreButton,
 } from './js/render-functions';
 
 const formEl = document.querySelector('.form');
+const loadMoreBtn = document.querySelector('.load-more');
 
-// Перевірка наявності форми
-if (!formEl) {
-  iziToast.error({
-    title: 'Form Missing',
-    message: 'Form element with class "form" not found on the page.',
-    position: 'topRight',
-  });
-  console.error('Form element not found!');
-}
-
-// Налаштування iziToast (опціонально)
-iziToast.settings({
-  timeout: 5000,
-  resetOnHover: true,
-  icon: 'material-icons',
-  transitionIn: 'flipInX',
-  transitionOut: 'flipOutX',
-});
+let query = '';
+let page = 1;
+let totalHits = 0;
+let loadedImages = 0;
 
 formEl?.addEventListener('submit', async event => {
   event.preventDefault();
 
   const searchInput = formEl.elements['search-text'];
-
-  // Перевірка поля вводу
-  if (!searchInput) {
-    iziToast.error({
-      title: 'Input Missing',
-      message: 'Search input field with name="search-text" not found.',
-      position: 'topRight',
-    });
-    console.error('Search input not found!');
-    return;
-  }
-
-  const query = searchInput.value.trim();
+  query = searchInput.value.trim();
+  page = 1;
+  loadedImages = 0;
 
   if (!query) {
     iziToast.warning({
@@ -57,42 +36,85 @@ formEl?.addEventListener('submit', async event => {
     return;
   }
 
-  // Очищення попередньої галереї та показ лоадера
   clearGallery();
+  hideLoadMoreButton();
   showLoader();
 
   try {
-    const data = await getImagesByQuery(query);
+    const data = await getImagesByQuery(query, page);
+    totalHits = data.totalHits;
+    const images = data.hits;
 
-    if (!data || !data.hits) {
-      throw new Error('Unexpected response structure from API.');
+    if (images.length === 0) {
+      iziToast.info({
+        title: 'No Results',
+        message: 'No images found. Try another keyword.',
+        position: 'topRight',
+      });
+      return;
     }
 
-    if (data.hits.length === 0) {
-      iziToast.error({
-        title: 'No Results',
-        message: 'No images match your search. Please try another keyword.',
-        position: 'topRight',
-      });
-    } else {
-      createGallery(data.hits);
+    createGallery(images);
+    loadedImages += images.length;
 
-      iziToast.success({
-        title: 'Success',
-        message: `Found ${data.totalHits} images.`,
-        position: 'topRight',
-      });
+    iziToast.success({
+      title: 'Success',
+      message: `Found ${totalHits} images.`,
+      position: 'topRight',
+    });
+
+    if (loadedImages < totalHits) {
+      showLoadMoreButton();
     }
   } catch (error) {
-    console.error('Search error:', error);
-
     iziToast.error({
-      title: 'Request Failed',
-      message: `Something went wrong: ${error.message}`,
+      title: 'Error',
+      message: error.message,
       position: 'topRight',
     });
   } finally {
     hideLoader();
     formEl.reset();
+  }
+});
+
+loadMoreBtn?.addEventListener('click', async () => {
+  page += 1;
+  showLoader();
+  hideLoadMoreButton();
+
+  try {
+    const data = await getImagesByQuery(query, page);
+    const images = data.hits;
+
+    createGallery(images);
+    loadedImages += images.length;
+
+    // Плавний scroll
+    const card = document.querySelector('.gallery-item');
+    const cardHeight = card?.getBoundingClientRect().height || 200;
+    window.scrollBy({
+      top: cardHeight * 2,
+      behavior: 'smooth',
+    });
+
+    if (loadedImages >= totalHits) {
+      hideLoadMoreButton();
+      iziToast.info({
+        title: 'End of Results',
+        message: `We're sorry, but you've reached the end of search results.`,
+        position: 'topRight',
+      });
+    } else {
+      showLoadMoreButton();
+    }
+  } catch (error) {
+    iziToast.error({
+      title: 'Load Failed',
+      message: error.message,
+      position: 'topRight',
+    });
+  } finally {
+    hideLoader();
   }
 });

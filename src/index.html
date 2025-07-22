@@ -2,20 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>twelve</title>
-    <!-- Favicon -->
+    <title>Image Search App</title>
     <link
       rel="icon"
-      type="image/png"
       href="https://raw.githubusercontent.com/Glib-teem/favicon-Abyss/main/images/G-Abyss-Icon-png-bg3.png"
-      sizes="32x32"
     />
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <!-- Фонове зображення -->
     <div class="bg-image"></div>
 
     <form class="form">
@@ -28,9 +23,22 @@
       <button type="submit">Search</button>
     </form>
 
-    <span class="loader is-hidden"></span>
-
     <ul class="gallery"></ul>
+
+    <!-- Кнопка Load More -->
+    <button class="load-more is-hidden">Load more</button>
+
+    <!-- Лоадер під кнопкою -->
+    <span class="loader is-hidden"></span>
+    <!-- кнопка up -->
+    <button
+      id="scrollToTop"
+      class="scroll-to-top is-hidden"
+      aria-label="Повернутися наверх"
+    >
+      ↑
+    </button>
     <script type="module" src="./main.js"></script>
+    <script type="module" src="./js/scroll.js"></script>
   </body>
 </html>

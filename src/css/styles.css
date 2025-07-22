@@ -29,7 +29,7 @@ body {
   margin: 0;
   text-align: center;
   position: relative;
-  overflow-x: hidden; /* Тільки горизонтальний overflow */
+  overflow-x: hidden;
 }
 
 body::before {
@@ -52,7 +52,7 @@ body::before {
   align-items: center;
   gap: 12px;
   margin-bottom: 32px;
-  flex-wrap: wrap; /* Для мобільних пристроїв */
+  flex-wrap: wrap;
 }
 
 .form input[name='search-text'] {
@@ -99,20 +99,34 @@ body::before {
   transform: translateY(0);
 }
 
-/* --- Стилі для галереї --- */
+/* --- Галерея: колонкова мозаїка --- */
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 24px;
-  justify-content: center;
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+  column-count: 3;
+  column-gap: 24px;
   max-width: 1200px;
   width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
 }
 
+@media (max-width: 1024px) {
+  .gallery {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .gallery {
+    column-count: 1;
+  }
+}
+
+/* --- Елемент галереї --- */
 .gallery-item {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 24px;
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   overflow: hidden;
@@ -136,16 +150,17 @@ body::before {
 
 .gallery-image {
   width: 100%;
-  height: 200px;
+  height: auto;
   object-fit: cover;
+  display: block;
   transition: transform 0.3s ease;
 }
 
 .gallery-item:hover .gallery-image {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
-/* --- Інформація про зображення --- */
+/* --- Інформація під зображенням --- */
 .info {
   padding: 16px;
   display: grid;
@@ -172,7 +187,7 @@ body::before {
   letter-spacing: 0.5px;
 }
 
-/* --- Стилі для лоадера --- */
+/* --- Лоадер --- */
 .loader {
   width: 48px;
   height: 48px;
@@ -199,10 +214,6 @@ body::before {
   animation: rotation 1.5s linear infinite reverse;
 }
 
-.is-hidden {
-  display: none !important;
-}
-
 @keyframes rotation {
   0% {
     transform: rotate(0deg);
@@ -212,57 +223,38 @@ body::before {
   }
 }
 
-/* --- Адаптивність --- */
-@media (max-width: 768px) {
-  body {
-    padding: 20px 10px;
-  }
-
-  .gallery {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .gallery-item {
-    max-width: 100%;
-  }
-
-  .gallery-image {
-    height: 180px;
-  }
-
-  .form {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .form input[name='search-text'] {
-    min-width: 100%;
-  }
-
-  .info {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    padding: 12px;
-  }
+.is-hidden {
+  display: none !important;
 }
 
-@media (max-width: 480px) {
-  .gallery-image {
-    height: 150px;
-  }
-
-  .info {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .info-item {
-    font-size: 12px;
-  }
+/* --- Load More Button --- */
+.load-more {
+  margin-top: 24px;
+  padding: 12px 28px;
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  background: linear-gradient(135deg, #ff3d00, #ff6b35);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-/* --- Додаткові ефекти --- */
+.load-more:hover {
+  background: linear-gradient(135deg, #e63900, #ff5722);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 61, 0, 0.4);
+}
+
+.load-more:active {
+  transform: translateY(0);
+}
+
+/* --- Ефект на галерею --- */
 .gallery-item::before {
   content: '';
   position: absolute;
@@ -301,4 +293,43 @@ body::before {
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 61, 0, 0.8);
+}
+/* --- Кнопка "Повернутися наверх" --- */
+.scroll-to-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  background: linear-gradient(135deg, #ff3d00, #ff6b35);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 24px;
+  font-family: 'Cinzel', serif;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 61, 0, 0.4);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 1000;
+}
+
+.scroll-to-top:hover {
+  background: linear-gradient(135deg, #e63900, #ff5722);
+  transform: translateY(-2px);
+}
+
+.scroll-to-top:active {
+  transform: scale(0.95);
+}
+
+/* Анімація появи/зникнення */
+.scroll-to-top.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+}
+
+.scroll-to-top:not(.is-hidden) {
+  opacity: 1;
+  pointer-events: auto;
 }

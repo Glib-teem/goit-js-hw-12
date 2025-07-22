@@ -6,29 +6,11 @@ import 'izitoast/dist/css/iziToast.min.css';
 
 const galleryEl = document.querySelector('.gallery');
 const loaderEl = document.querySelector('.loader');
+const loadMoreBtn = document.querySelector('.load-more');
 
-// Перевірка наявності елементів з повідомленням
-if (!galleryEl) {
-  iziToast.error({
-    title: 'Gallery not found',
-    message: 'Element with class "gallery" is missing from the page.',
-    position: 'topRight',
-  });
-  console.error('Gallery element not found!');
-}
-
-if (!loaderEl) {
-  iziToast.error({
-    title: 'Loader not found',
-    message: 'Element with class "loader" is missing from the page.',
-    position: 'topRight',
-  });
-  console.error('Loader element not found!');
-}
-
-// Ініціалізація SimpleLightbox з обробкою помилок
 let lightbox;
 
+// Ініціалізація lightbox
 try {
   lightbox = new SimpleLightbox('.gallery a', {
     captionsData: 'alt',
@@ -40,9 +22,9 @@ try {
     message: `Failed to initialize lightbox: ${err.message}`,
     position: 'topRight',
   });
-  console.error('SimpleLightbox initialization error:', err);
 }
 
+// Функція для створення розмітки галереї
 export function createGallery(images) {
   if (!Array.isArray(images) || images.length === 0) {
     iziToast.info({
@@ -50,7 +32,6 @@ export function createGallery(images) {
       message: 'No images found to display.',
       position: 'topRight',
     });
-    console.warn('No images to display');
     return;
   }
 
@@ -89,42 +70,30 @@ export function createGallery(images) {
       message: 'Unable to refresh image preview.',
       position: 'topRight',
     });
-    console.error('Lightbox refresh error:', err);
   }
 }
 
+// Очищення галереї
 export function clearGallery() {
   if (galleryEl) {
     galleryEl.innerHTML = '';
-  } else {
-    iziToast.warning({
-      title: 'Gallery Missing',
-      message: 'Cannot clear gallery — element is missing.',
-      position: 'topRight',
-    });
   }
 }
 
+// Показ/приховування лоадера
 export function showLoader() {
-  if (loaderEl) {
-    loaderEl.classList.remove('is-hidden');
-  } else {
-    iziToast.warning({
-      title: 'Loader Missing',
-      message: 'Cannot show loader — element is missing.',
-      position: 'topRight',
-    });
-  }
+  loaderEl?.classList.remove('is-hidden');
 }
 
 export function hideLoader() {
-  if (loaderEl) {
-    loaderEl.classList.add('is-hidden');
-  } else {
-    iziToast.warning({
-      title: 'Loader Missing',
-      message: 'Cannot hide loader — element is missing.',
-      position: 'topRight',
-    });
-  }
+  loaderEl?.classList.add('is-hidden');
+}
+
+// Показ/приховування кнопки Load More
+export function showLoadMoreButton() {
+  loadMoreBtn?.classList.remove('is-hidden');
+}
+
+export function hideLoadMoreButton() {
+  loadMoreBtn?.classList.add('is-hidden');
 }
